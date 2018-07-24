@@ -30,11 +30,12 @@ public extension Disk {
     ///   - directory: user directory to store the image file in
     ///   - path: file location to store the data (i.e. "Folder/file.png")
     /// - Throws: Error if there were any issues writing the image to disk
+  
     static func save(_ value: UIImage, to directory: Directory, as path: String) throws {
         do {
             var imageData: Data
             if path.suffix(4).lowercased() == ".png" {
-                if let data = UIImagePNGRepresentation(value) {
+                if let data = value.pngData() {
                     imageData = data
                 } else {
                     throw createError(
@@ -45,7 +46,7 @@ public extension Disk {
                     )
                 }
             } else if path.suffix(4).lowercased() == ".jpg" || path.suffix(5).lowercased() == ".jpeg" {
-                if let data = UIImageJPEGRepresentation(value, 1) {
+                if let data = value.jpegData(compressionQuality: 1){
                     imageData = data
                 } else {
                     throw createError(
@@ -56,9 +57,9 @@ public extension Disk {
                     )
                 }
             } else {
-                if let data = UIImagePNGRepresentation(value) {
+                if let data = value.pngData() {
                     imageData = data
-                } else if let data = UIImageJPEGRepresentation(value, 1) {
+                } else if let data = value.jpegData(compressionQuality: 1){
                     imageData = data
                 } else {
                     throw createError(
